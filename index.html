@@ -62,25 +62,44 @@
             }
 
             .nav-link {
-                padding: 8px 16px;
-                border-radius: 6px;
-                font-weight: 500;
+                padding: 10px 20px;
+                border-radius: 8px;
+                font-weight: 600;
                 font-size: 0.875rem;
                 text-decoration: none;
-                transition: all 0.2s ease;
-                color: rgba(255, 255, 255, 0.8);
-                border: 1px solid transparent;
+                transition: all 0.25s ease;
+                color: #1a1a1a;
+                background: #fbbf24;
+                border: 2px solid #f59e0b;
+                box-shadow:
+                    0 4px 6px rgba(0, 0, 0, 0.15),
+                    0 2px 4px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .nav-link:hover {
-                color: white;
-                background: rgba(255, 255, 255, 0.1);
+                background: #fcd34d;
+                border-color: #fbbf24;
+                box-shadow:
+                    0 8px 12px rgba(0, 0, 0, 0.2),
+                    0 4px 8px rgba(0, 0, 0, 0.15);
+                transform: translateY(-2px);
+            }
+
+            .nav-link:active {
+                transform: translateY(0);
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             }
 
             .nav-link.active {
-                color: white;
-                background: rgba(255, 255, 255, 0.2);
-                border-color: rgba(255, 255, 255, 0.3);
+                background: #fbbf24;
+                border-color: #d97706;
+                box-shadow:
+                    0 6px 12px rgba(251, 191, 36, 0.4),
+                    0 2px 4px rgba(0, 0, 0, 0.1);
             }
 
             /* Live Calculations Card */
