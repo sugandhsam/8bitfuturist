@@ -1,821 +1,1259 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>8BF Prop Bunker</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@500&display=swap');
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>8BF Prop Bunker</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@500&display=swap");
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8f9fa;
-            color: #1a1a1a;
-            line-height: 1.5;
-            padding: 20px;
-        }
+            body {
+                font-family: "Inter", sans-serif;
+                background-color: #f8f9fa;
+                color: #1a1a1a;
+                line-height: 1.5;
+                padding: 20px;
+            }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+            }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+            .header-gradient {
+                background: linear-gradient(135deg, #1e3a8a 0%, #1a1a2e 100%);
+                color: white;
+                border-radius: 0.75rem;
+                padding: 2rem;
+                margin-bottom: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
 
-        .header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #1a1a1a;
-        }
+            .header-content {
+                flex: 1;
+            }
 
-        .header p {
-            color: #6b7280;
-            font-size: 1rem;
-        }
+            .header-content h1 {
+                font-size: 2rem;
+                font-weight: 700;
+                margin-bottom: 8px;
+                color: white;
+            }
 
-        /* Live Calculations Card */
-        .live-calculations {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            margin-bottom: 30px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
-        }
+            .header-content p {
+                color: rgba(255, 255, 255, 0.8);
+                font-size: 1rem;
+            }
 
-        .live-calculations h2 {
-            font-size: 1.125rem;
-            font-weight: 600;
-            color: #1a1a1a;
-        }
+            .nav-links {
+                display: flex;
+                gap: 12px;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
 
-        .risk-status {
-            display: inline-block;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            margin-left: 12px;
-            font-family: 'Roboto Mono', monospace;
-        }
+            .nav-link {
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                font-size: 0.875rem;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                color: rgba(255, 255, 255, 0.8);
+                border: 1px solid transparent;
+            }
 
-        .risk-low { background: #f0f9ff; color: #0369a1; }
-        .risk-medium { background: #fffbeb; color: #d97706; }
-        .risk-high { background: #fef2f2; color: #dc2626; }
+            .nav-link:hover {
+                color: white;
+                background: rgba(255, 255, 255, 0.1);
+            }
 
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 24px;
-        }
+            .nav-link.active {
+                color: white;
+                background: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
 
-        .metric {
-            text-align: left;
-        }
+            /* Live Calculations Card */
+            .live-calculations {
+                background: #fff;
+                border-radius: 12px;
+                padding: 24px;
+                margin-bottom: 30px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                border: 1px solid #e5e7eb;
+            }
 
-        .metric-label {
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
+            .live-calculations h2 {
+                font-size: 1.125rem;
+                font-weight: 600;
+                color: #1a1a1a;
+            }
 
-        .metric-value {
-            font-size: 2rem;
-            font-weight: 500;
-            color: #1a1a1a;
-            line-height: 1.2;
-        }
+            .risk-status {
+                display: inline-block;
+                padding: 4px 8px;
+                border-radius: 4px;
+                font-size: 0.75rem;
+                font-weight: 500;
+                margin-left: 12px;
+                font-family: "Roboto Mono", monospace;
+            }
 
-        .metric.profit-target {
-            padding-right: 3rem;
-        }
-
-        .metric.profit-target .metric-value {
-            font-size: 3.5rem;
-            font-weight: 300;
-            color: #16a34a;
-        }
-
-        .metrics-separator {
-            border: none;
-            height: 1px;
-            background-color: #e5e7eb;
-            margin: 16px 0 24px 0;
-        }
-
-        /* Main Content Grid */
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-        }
-
-        .section {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
-        }
-
-        .section h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #1a1a1a;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #374151;
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .dropdown {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.875rem;
-            background: #fff;
-            color: #1a1a1a;
-        }
-
-        .dropdown:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .slider-container {
-            margin-top: 8px;
-        }
-
-        .slider {
-            width: 100%;
-            height: 2px;
-            background: #e5e7eb;
-            border-radius: 1px;
-            outline: none;
-            -webkit-appearance: none;
-            margin-bottom: 12px;
-        }
-
-        .slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #1a1a1a;
-            cursor: pointer;
-        }
-
-        .slider::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #1a1a1a;
-            cursor: pointer;
-            border: none;
-        }
-
-        .slider-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .slider-value {
-            min-width: 80px;
-            text-align: center;
-            font-weight: 600;
-            color: #1a1a1a;
-            background: #f9fafb;
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: 1px solid #e5e7eb;
-            font-size: 0.875rem;
-        }
-
-        .manual-input {
-            width: 80px;
-            padding: 6px 8px;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            text-align: center;
-            font-size: 0.875rem;
-            background: #fff;
-        }
-
-        .manual-input:focus {
-            outline: none;
-            border-color: #3b82f6;
-        }
-
-        .tab-container {
-            display: flex;
-            background: #f3f4f6;
-            border-radius: 6px;
-            padding: 2px;
-            margin-bottom: 12px;
-        }
-
-        .tab {
-            flex: 1;
-            padding: 6px 12px;
-            text-align: center;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 0.75rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: none;
-            background: transparent;
-            color: #6b7280;
-        }
-
-        .tab.active {
-            background: #fff;
-            color: #1a1a1a;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-        }
-
-        .toggle-container {
-            margin-top: 20px;
-        }
-
-        .toggle {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .toggle input[type="checkbox"] {
-            width: 16px;
-            height: 16px;
-        }
-
-        .toggle label {
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #374151;
-            cursor: pointer;
-        }
-
-        /* Drawdown Analysis */
-        .drawdown-section {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 16px;
-            margin-top: 20px;
-        }
-
-        .drawdown-section h4 {
-            font-size: 0.875rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: #1a1a1a;
-        }
-
-        .drawdown-warning {
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 12px;
-            font-size: 0.75rem;
-            color: #991b1b;
-            font-weight: 500;
-        }
-
-        .drawdown-metrics {
-            font-size: 0.75rem;
-            color: #4b5563;
-            line-height: 1.4;
-        }
-
-        .drawdown-metrics p {
-            margin-bottom: 6px;
-        }
-
-        .drawdown-metrics strong {
-            color: #1a1a1a;
-        }
-
-        /* Scenario Table */
-        .scenario-section {
-            grid-column: 1 / -1;
-            margin-top: 20px;
-        }
-
-        .scenario-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            overflow: hidden;
-            background: #fff;
-        }
-
-        .scenario-table th {
-            background: #f9fafb;
-            color: #374151;
-            padding: 12px 8px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 0.75rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .scenario-table td {
-            padding: 12px 8px;
-            text-align: center;
-            border-bottom: 1px solid #f3f4f6;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-
-        .scenario-table tr:hover {
-            background: #f9fafb;
-        }
-
-        @media (max-width: 768px) {
-            .content-grid {
-                grid-template-columns: 1fr;
+            .risk-low {
+                background: #f0f9ff;
+                color: #0369a1;
+            }
+            .risk-medium {
+                background: #fffbeb;
+                color: #d97706;
+            }
+            .risk-high {
+                background: #fef2f2;
+                color: #dc2626;
             }
 
             .metrics-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-                gap: 16px;
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 24px;
+            }
+
+            .metric {
+                text-align: left;
+            }
+
+            .metric-label {
+                font-size: 0.75rem;
+                color: #6b7280;
+                margin-bottom: 4px;
+                font-weight: 500;
+            }
+
+            .metric-value {
+                font-size: 2rem;
+                font-weight: 500;
+                color: #1a1a1a;
+                line-height: 1.2;
+            }
+
+            .metric.profit-target {
+                padding-right: 3rem;
+            }
+
+            .metric.profit-target .metric-value {
+                font-size: 3.5rem;
+                font-weight: 300;
+                color: #16a34a;
+            }
+
+            .metrics-separator {
+                border: none;
+                height: 1px;
+                background-color: #e5e7eb;
+                margin: 16px 0 24px 0;
+            }
+
+            /* Main Content Grid */
+            .content-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 30px;
+            }
+
+            .section {
+                background: #fff;
+                border-radius: 12px;
+                padding: 24px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+                border: 1px solid #e5e7eb;
+            }
+
+            .section h3 {
+                font-size: 1rem;
+                font-weight: 600;
+                margin-bottom: 20px;
+                color: #1a1a1a;
+            }
+
+            .input-group {
+                margin-bottom: 20px;
+            }
+
+            .input-label {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #374151;
+                margin-bottom: 8px;
+                display: block;
+            }
+
+            .dropdown {
+                width: 100%;
+                padding: 8px 12px;
+                border: 1px solid #d1d5db;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                background: #fff;
+                color: #1a1a1a;
+            }
+
+            .dropdown:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            }
+
+            .slider-container {
+                margin-top: 8px;
+            }
+
+            .slider {
+                width: 100%;
+                height: 2px;
+                background: #e5e7eb;
+                border-radius: 1px;
+                outline: none;
+                -webkit-appearance: none;
+                margin-bottom: 12px;
+            }
+
+            .slider::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #1a1a1a;
+                cursor: pointer;
+            }
+
+            .slider::-moz-range-thumb {
+                width: 16px;
+                height: 16px;
+                border-radius: 50%;
+                background: #1a1a1a;
+                cursor: pointer;
+                border: none;
             }
 
             .slider-row {
-                flex-direction: column;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .slider-value {
+                min-width: 80px;
+                text-align: center;
+                font-weight: 600;
+                color: #1a1a1a;
+                background: #f9fafb;
+                padding: 6px 12px;
+                border-radius: 4px;
+                border: 1px solid #e5e7eb;
+                font-size: 0.875rem;
+            }
+
+            .manual-input {
+                width: 80px;
+                padding: 6px 8px;
+                border: 1px solid #d1d5db;
+                border-radius: 4px;
+                text-align: center;
+                font-size: 0.875rem;
+                background: #fff;
+            }
+
+            .manual-input:focus {
+                outline: none;
+                border-color: #3b82f6;
+            }
+
+            .tab-container {
+                display: flex;
+                background: #f3f4f6;
+                border-radius: 6px;
+                padding: 2px;
+                margin-bottom: 12px;
+            }
+
+            .tab {
+                flex: 1;
+                padding: 6px 12px;
+                text-align: center;
+                border-radius: 4px;
+                font-weight: 500;
+                font-size: 0.75rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border: none;
+                background: transparent;
+                color: #6b7280;
+            }
+
+            .tab.active {
+                background: #fff;
+                color: #1a1a1a;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            }
+
+            .toggle-container {
+                margin-top: 20px;
+            }
+
+            .toggle {
+                display: flex;
+                align-items: center;
                 gap: 8px;
             }
 
-            .slider-value,
-            .manual-input {
+            .toggle input[type="checkbox"] {
+                width: 16px;
+                height: 16px;
+            }
+
+            .toggle label {
+                font-size: 0.875rem;
+                font-weight: 500;
+                color: #374151;
+                cursor: pointer;
+            }
+
+            /* Drawdown Analysis */
+            .drawdown-section {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 8px;
+                padding: 16px;
+                margin-top: 20px;
+            }
+
+            .drawdown-section h4 {
+                font-size: 0.875rem;
+                font-weight: 600;
+                margin-bottom: 12px;
+                color: #1a1a1a;
+            }
+
+            .drawdown-warning {
+                background: #fef2f2;
+                border: 1px solid #fecaca;
+                border-radius: 6px;
+                padding: 12px;
+                margin-bottom: 12px;
+                font-size: 0.75rem;
+                color: #991b1b;
+                font-weight: 500;
+            }
+
+            .drawdown-metrics {
+                font-size: 0.75rem;
+                color: #4b5563;
+                line-height: 1.4;
+            }
+
+            .drawdown-metrics p {
+                margin-bottom: 6px;
+            }
+
+            .drawdown-metrics strong {
+                color: #1a1a1a;
+            }
+
+            /* Scenario Table */
+            .scenario-section {
+                grid-column: 1 / -1;
+                margin-top: 20px;
+            }
+
+            .scenario-table {
                 width: 100%;
+                border-collapse: collapse;
+                margin-top: 16px;
+                border: 1px solid #e5e7eb;
+                border-radius: 8px;
+                overflow: hidden;
+                background: #fff;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>8BF Prop Bunker</h1>
-            <p>Risk-to-Reward Analysis for Prop Firm Challenges</p>
-        </div>
 
-        <div class="live-calculations">
-            <h2>
-                Live Calculations
-                <span id="riskStatus" class="risk-status risk-low">LOW RISK - Safe approach - 0.60% risk per trade</span>
-            </h2>
-            <hr class="metrics-separator">
-            <div class="metrics-grid">
-                <div class="metric profit-target">
-                    <div class="metric-label">Profit Target</div>
-                    <div class="metric-value" id="profitTargetDisplay">$3,000</div>
+            .scenario-table th {
+                background: #f9fafb;
+                color: #374151;
+                padding: 12px 8px;
+                text-align: center;
+                font-weight: 600;
+                font-size: 0.75rem;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .scenario-table td {
+                padding: 12px 8px;
+                text-align: center;
+                border-bottom: 1px solid #f3f4f6;
+                font-size: 0.75rem;
+                font-weight: 500;
+            }
+
+            .scenario-table tr:hover {
+                background: #f9fafb;
+            }
+
+            @media (max-width: 768px) {
+                .header-gradient {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .nav-links {
+                    width: 100%;
+                }
+
+                .nav-link {
+                    flex: 1;
+                    text-align: center;
+                }
+
+                .content-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .metrics-grid {
+                    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+                    gap: 16px;
+                }
+
+                .slider-row {
+                    flex-direction: column;
+                    gap: 8px;
+                }
+
+                .slider-value,
+                .manual-input {
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- Header with Navigation -->
+            <div class="header-gradient">
+                <div class="header-content">
+                    <h1>8BF Prop Bunker</h1>
+                    <p>Risk-to-Reward Analysis for Prop Firm Challenges</p>
                 </div>
-                <div class="metric">
-                    <div class="metric-label">Per Trade P&L</div>
-                    <div class="metric-value" id="perTradePnL">$400</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">Risk-Reward</div>
-                    <div class="metric-value" id="riskReward">1.33:1</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">Trades to Clear</div>
-                    <div class="metric-value" id="tradesNeeded">8</div>
-                </div>
-                <div class="metric">
-                    <div class="metric-label">Total Trades (W/L)</div>
-                    <div class="metric-value" id="totalTrades">25</div>
+                <ul class="nav-links">
+                    <li><a href="/" class="nav-link active">Prop Bunker</a></li>
+                    <li>
+                        <a href="trade_journal/" class="nav-link"
+                            >Trade Journal</a
+                        >
+                    </li>
+                </ul>
+            </div>
+
+            <div class="live-calculations">
+                <h2>
+                    Live Calculations
+                    <span id="riskStatus" class="risk-status risk-low"
+                        >LOW RISK - Safe approach - 0.60% risk per trade</span
+                    >
+                </h2>
+                <hr class="metrics-separator" />
+                <div class="metrics-grid">
+                    <div class="metric profit-target">
+                        <div class="metric-label">Profit Target</div>
+                        <div class="metric-value" id="profitTargetDisplay">
+                            $3,000
+                        </div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Per Trade P&L</div>
+                        <div class="metric-value" id="perTradePnL">$400</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Risk-Reward</div>
+                        <div class="metric-value" id="riskReward">1.33:1</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Trades to Clear</div>
+                        <div class="metric-value" id="tradesNeeded">8</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Total Trades (W/L)</div>
+                        <div class="metric-value" id="totalTrades">25</div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="content-grid">
-            <div class="section">
-                <h3>Account Parameters</h3>
+            <div class="content-grid">
+                <div class="section">
+                    <h3>Account Parameters</h3>
 
-                <div class="input-group">
-                    <label class="input-label">Prop Trading Firm</label>
-                    <select id="propFirm" class="dropdown">
-                        <option value="custom">Custom Account</option>
-                        <option value="apex" selected>Apex Trading</option>
-                        <option value="topstep">TopStep</option>
-                        <option value="myfundedfutures">MyFundedFutures</option>
-                        <option value="tradeify">Tradeify</option>
-                        <option value="tpt">The Prop Trading</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Account Plan</label>
-                    <select id="propPlan" class="dropdown">
-                        <option value="50k">$50K - $3,000 Target</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Account Size</label>
-                    <div class="slider-container">
-                        <input type="range" id="accountSizeSlider" class="slider" min="25000" max="300000" step="25000" value="50000">
-                        <div class="slider-row">
-                            <div class="slider-value" id="accountSizeValue">50K</div>
-                            <input type="number" id="accountSize" class="manual-input" value="50000">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Profit Target</label>
-                    <div class="slider-container">
-                        <input type="range" id="profitTargetSlider" class="slider" min="1000" max="20000" step="500" value="3000">
-                        <div class="slider-row">
-                            <div class="slider-value" id="profitTargetValue">3000</div>
-                            <input type="number" id="profitTarget" class="manual-input" value="3000">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Drawdown Type</label>
-                    <div class="tab-container">
-                        <button class="tab active" id="trailingTab">Trailing Drawdown</button>
-                        <button class="tab" id="eodTab">End-of-Day Drawdown</button>
+                    <div class="input-group">
+                        <label class="input-label">Prop Trading Firm</label>
+                        <select id="propFirm" class="dropdown">
+                            <option value="custom">Custom Account</option>
+                            <option value="apex" selected>Apex Trading</option>
+                            <option value="topstep">TopStep</option>
+                            <option value="myfundedfutures">
+                                MyFundedFutures
+                            </option>
+                            <option value="tradeify">Tradeify</option>
+                            <option value="tpt">The Prop Trading</option>
+                        </select>
                     </div>
 
-                    <div id="trailingDrawdownContainer">
+                    <div class="input-group">
+                        <label class="input-label">Account Plan</label>
+                        <select id="propPlan" class="dropdown">
+                            <option value="50k">$50K - $3,000 Target</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Account Size</label>
                         <div class="slider-container">
-                            <input type="range" id="trailingDrawdownSlider" class="slider" min="500" max="10000" step="100" value="2500">
+                            <input
+                                type="range"
+                                id="accountSizeSlider"
+                                class="slider"
+                                min="25000"
+                                max="300000"
+                                step="25000"
+                                value="50000"
+                            />
                             <div class="slider-row">
-                                <div class="slider-value" id="trailingDrawdownValue">2500</div>
-                                <input type="number" id="trailingDrawdown" class="manual-input" value="2500">
+                                <div class="slider-value" id="accountSizeValue">
+                                    50K
+                                </div>
+                                <input
+                                    type="number"
+                                    id="accountSize"
+                                    class="manual-input"
+                                    value="50000"
+                                />
                             </div>
                         </div>
                     </div>
 
-                    <div id="eodDrawdownContainer" style="display: none;">
+                    <div class="input-group">
+                        <label class="input-label">Profit Target</label>
                         <div class="slider-container">
-                            <input type="range" id="eodDrawdownSlider" class="slider" min="500" max="10000" step="100" value="2500">
+                            <input
+                                type="range"
+                                id="profitTargetSlider"
+                                class="slider"
+                                min="1000"
+                                max="20000"
+                                step="500"
+                                value="3000"
+                            />
                             <div class="slider-row">
-                                <div class="slider-value" id="eodDrawdownValue">2500</div>
-                                <input type="number" id="eodDrawdown" class="manual-input" value="2500">
+                                <div
+                                    class="slider-value"
+                                    id="profitTargetValue"
+                                >
+                                    3000
+                                </div>
+                                <input
+                                    type="number"
+                                    id="profitTarget"
+                                    class="manual-input"
+                                    value="3000"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Drawdown Type</label>
+                        <div class="tab-container">
+                            <button class="tab active" id="trailingTab">
+                                Trailing Drawdown
+                            </button>
+                            <button class="tab" id="eodTab">
+                                End-of-Day Drawdown
+                            </button>
+                        </div>
+
+                        <div id="trailingDrawdownContainer">
+                            <div class="slider-container">
+                                <input
+                                    type="range"
+                                    id="trailingDrawdownSlider"
+                                    class="slider"
+                                    min="500"
+                                    max="10000"
+                                    step="100"
+                                    value="2500"
+                                />
+                                <div class="slider-row">
+                                    <div
+                                        class="slider-value"
+                                        id="trailingDrawdownValue"
+                                    >
+                                        2500
+                                    </div>
+                                    <input
+                                        type="number"
+                                        id="trailingDrawdown"
+                                        class="manual-input"
+                                        value="2500"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="eodDrawdownContainer" style="display: none">
+                            <div class="slider-container">
+                                <input
+                                    type="range"
+                                    id="eodDrawdownSlider"
+                                    class="slider"
+                                    min="500"
+                                    max="10000"
+                                    step="100"
+                                    value="2500"
+                                />
+                                <div class="slider-row">
+                                    <div
+                                        class="slider-value"
+                                        id="eodDrawdownValue"
+                                    >
+                                        2500
+                                    </div>
+                                    <input
+                                        type="number"
+                                        id="eodDrawdown"
+                                        class="manual-input"
+                                        value="2500"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+                <div class="section">
+                    <h3>Trading Strategy</h3>
+
+                    <div class="input-group">
+                        <label class="input-label">Number of Contracts</label>
+                        <div class="slider-container">
+                            <input
+                                type="range"
+                                id="contractsSlider"
+                                class="slider"
+                                min="1"
+                                max="20"
+                                step="1"
+                                value="1"
+                            />
+                            <div class="slider-row">
+                                <div class="slider-value" id="contractsValue">
+                                    1
+                                </div>
+                                <input
+                                    type="number"
+                                    id="contracts"
+                                    class="manual-input"
+                                    value="1"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label"
+                            >Target Points per Trade</label
+                        >
+                        <div class="slider-container">
+                            <input
+                                type="range"
+                                id="targetPointsSlider"
+                                class="slider"
+                                min="5"
+                                max="100"
+                                step="1"
+                                value="20"
+                            />
+                            <div class="slider-row">
+                                <div
+                                    class="slider-value"
+                                    id="targetPointsValue"
+                                >
+                                    20
+                                </div>
+                                <input
+                                    type="number"
+                                    id="targetPoints"
+                                    class="manual-input"
+                                    value="20"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Stop Loss Points</label>
+                        <div class="slider-container">
+                            <input
+                                type="range"
+                                id="stopPointsSlider"
+                                class="slider"
+                                min="5"
+                                max="50"
+                                step="1"
+                                value="15"
+                            />
+                            <div class="slider-row">
+                                <div class="slider-value" id="stopPointsValue">
+                                    15
+                                </div>
+                                <input
+                                    type="number"
+                                    id="stopPoints"
+                                    class="manual-input"
+                                    value="15"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label">Win Rate</label>
+                        <div class="slider-container">
+                            <input
+                                type="range"
+                                id="winRateSlider"
+                                class="slider"
+                                min="10"
+                                max="90"
+                                step="1"
+                                value="60"
+                            />
+                            <div class="slider-row">
+                                <div class="slider-value" id="winRateValue">
+                                    60%
+                                </div>
+                                <input
+                                    type="number"
+                                    id="winRate"
+                                    class="manual-input"
+                                    value="60"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="drawdown-section">
+                        <h4>Drawdown Analysis</h4>
+                        <div id="drawdownWarning" class="drawdown-warning">
+                            Maximum consecutive losses before failure:
+                            <strong>8</strong><br />
+                            Effective drawdown limit:
+                            <strong>$2,500</strong> (5.0% of account)
+                        </div>
+                        <div id="drawdownMetrics" class="drawdown-metrics">
+                            <p>
+                                <strong>Trailing Drawdown Risk:</strong> Holding
+                                positions overnight increases trailing drawdown
+                                risk
+                            </p>
+                            <p><strong>Loss per Trade:</strong> $300</p>
+                            <p>
+                                <strong>Failure Point:</strong> 8 consecutive
+                                losses
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="toggle-container">
+                        <div class="toggle">
+                            <input type="checkbox" id="advancedMode" />
+                            <label for="advancedMode"
+                                >Enable Advanced Scenarios</label
+                            >
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="section">
-                <h3>Trading Strategy</h3>
-
-                <div class="input-group">
-                    <label class="input-label">Number of Contracts</label>
-                    <div class="slider-container">
-                        <input type="range" id="contractsSlider" class="slider" min="1" max="20" step="1" value="1">
-                        <div class="slider-row">
-                            <div class="slider-value" id="contractsValue">1</div>
-                            <input type="number" id="contracts" class="manual-input" value="1">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Target Points per Trade</label>
-                    <div class="slider-container">
-                        <input type="range" id="targetPointsSlider" class="slider" min="5" max="100" step="1" value="20">
-                        <div class="slider-row">
-                            <div class="slider-value" id="targetPointsValue">20</div>
-                            <input type="number" id="targetPoints" class="manual-input" value="20">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Stop Loss Points</label>
-                    <div class="slider-container">
-                        <input type="range" id="stopPointsSlider" class="slider" min="5" max="50" step="1" value="15">
-                        <div class="slider-row">
-                            <div class="slider-value" id="stopPointsValue">15</div>
-                            <input type="number" id="stopPoints" class="manual-input" value="15">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label class="input-label">Win Rate</label>
-                    <div class="slider-container">
-                        <input type="range" id="winRateSlider" class="slider" min="10" max="90" step="1" value="60">
-                        <div class="slider-row">
-                            <div class="slider-value" id="winRateValue">60%</div>
-                            <input type="number" id="winRate" class="manual-input" value="60">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="drawdown-section">
-                    <h4>Drawdown Analysis</h4>
-                    <div id="drawdownWarning" class="drawdown-warning">
-                        Maximum consecutive losses before failure: <strong>8</strong><br>
-                        Effective drawdown limit: <strong>$2,500</strong> (5.0% of account)
-                    </div>
-                    <div id="drawdownMetrics" class="drawdown-metrics">
-                        <p><strong>Trailing Drawdown Risk:</strong> Holding positions overnight increases trailing drawdown risk</p>
-                        <p><strong>Loss per Trade:</strong> $300</p>
-                        <p><strong>Failure Point:</strong> 8 consecutive losses</p>
-                    </div>
-                </div>
-
-                <div class="toggle-container">
-                    <div class="toggle">
-                        <input type="checkbox" id="advancedMode">
-                        <label for="advancedMode">Enable Advanced Scenarios</label>
-                    </div>
-                </div>
+            <div
+                class="section scenario-section"
+                id="scenarioSection"
+                style="display: none"
+            >
+                <h3>Risk Scenario Analysis</h3>
+                <table class="scenario-table">
+                    <thead>
+                        <tr>
+                            <th>Risk Level</th>
+                            <th>Contracts</th>
+                            <th>Target Points</th>
+                            <th>Stop Points</th>
+                            <th>R:R Ratio</th>
+                            <th>Per Trade P&L</th>
+                            <th>Trades Needed</th>
+                            <th>Max Loss</th>
+                            <th>Assessment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scenarioTableBody"></tbody>
+                </table>
             </div>
         </div>
 
-        <div class="section scenario-section" id="scenarioSection" style="display: none;">
-            <h3>Risk Scenario Analysis</h3>
-            <table class="scenario-table">
-                <thead>
-                    <tr>
-                        <th>Risk Level</th>
-                        <th>Contracts</th>
-                        <th>Target Points</th>
-                        <th>Stop Points</th>
-                        <th>R:R Ratio</th>
-                        <th>Per Trade P&L</th>
-                        <th>Trades Needed</th>
-                        <th>Max Loss</th>
-                        <th>Assessment</th>
-                    </tr>
-                </thead>
-                <tbody id="scenarioTableBody">
-                </tbody>
-            </table>
-        </div>
-    </div>
+        <script>
+            // NQ contract specifications
+            const NQ_POINT_VALUE = 20;
 
-    <script>
-        // NQ contract specifications
-        const NQ_POINT_VALUE = 20;
+            // DOM elements
+            const elements = {
+                propFirm: document.getElementById("propFirm"),
+                propPlan: document.getElementById("propPlan"),
+                trailingTab: document.getElementById("trailingTab"),
+                eodTab: document.getElementById("eodTab"),
+                trailingDrawdownContainer: document.getElementById(
+                    "trailingDrawdownContainer",
+                ),
+                eodDrawdownContainer: document.getElementById(
+                    "eodDrawdownContainer",
+                ),
+                accountSize: document.getElementById("accountSize"),
+                accountSizeSlider: document.getElementById("accountSizeSlider"),
+                accountSizeValue: document.getElementById("accountSizeValue"),
+                profitTarget: document.getElementById("profitTarget"),
+                profitTargetSlider:
+                    document.getElementById("profitTargetSlider"),
+                profitTargetValue: document.getElementById("profitTargetValue"),
+                trailingDrawdown: document.getElementById("trailingDrawdown"),
+                trailingDrawdownSlider: document.getElementById(
+                    "trailingDrawdownSlider",
+                ),
+                trailingDrawdownValue: document.getElementById(
+                    "trailingDrawdownValue",
+                ),
+                eodDrawdown: document.getElementById("eodDrawdown"),
+                eodDrawdownSlider: document.getElementById("eodDrawdownSlider"),
+                eodDrawdownValue: document.getElementById("eodDrawdownValue"),
+                contracts: document.getElementById("contracts"),
+                contractsSlider: document.getElementById("contractsSlider"),
+                contractsValue: document.getElementById("contractsValue"),
+                targetPoints: document.getElementById("targetPoints"),
+                targetPointsSlider:
+                    document.getElementById("targetPointsSlider"),
+                targetPointsValue: document.getElementById("targetPointsValue"),
+                stopPoints: document.getElementById("stopPoints"),
+                stopPointsSlider: document.getElementById("stopPointsSlider"),
+                stopPointsValue: document.getElementById("stopPointsValue"),
+                winRate: document.getElementById("winRate"),
+                winRateSlider: document.getElementById("winRateSlider"),
+                winRateValue: document.getElementById("winRateValue"),
+                profitTargetDisplay: document.getElementById(
+                    "profitTargetDisplay",
+                ),
+                perTradePnL: document.getElementById("perTradePnL"),
+                tradesNeeded: document.getElementById("tradesNeeded"),
+                totalTrades: document.getElementById("totalTrades"),
+                riskReward: document.getElementById("riskReward"),
+                riskStatus: document.getElementById("riskStatus"),
+                advancedMode: document.getElementById("advancedMode"),
+                drawdownWarning: document.getElementById("drawdownWarning"),
+                drawdownMetrics: document.getElementById("drawdownMetrics"),
+                scenarioSection: document.getElementById("scenarioSection"),
+                scenarioTableBody: document.getElementById("scenarioTableBody"),
+            };
 
-        // DOM elements
-        const elements = {
-            propFirm: document.getElementById('propFirm'),
-            propPlan: document.getElementById('propPlan'),
-            trailingTab: document.getElementById('trailingTab'),
-            eodTab: document.getElementById('eodTab'),
-            trailingDrawdownContainer: document.getElementById('trailingDrawdownContainer'),
-            eodDrawdownContainer: document.getElementById('eodDrawdownContainer'),
-            accountSize: document.getElementById('accountSize'),
-            accountSizeSlider: document.getElementById('accountSizeSlider'),
-            accountSizeValue: document.getElementById('accountSizeValue'),
-            profitTarget: document.getElementById('profitTarget'),
-            profitTargetSlider: document.getElementById('profitTargetSlider'),
-            profitTargetValue: document.getElementById('profitTargetValue'),
-            trailingDrawdown: document.getElementById('trailingDrawdown'),
-            trailingDrawdownSlider: document.getElementById('trailingDrawdownSlider'),
-            trailingDrawdownValue: document.getElementById('trailingDrawdownValue'),
-            eodDrawdown: document.getElementById('eodDrawdown'),
-            eodDrawdownSlider: document.getElementById('eodDrawdownSlider'),
-            eodDrawdownValue: document.getElementById('eodDrawdownValue'),
-            contracts: document.getElementById('contracts'),
-            contractsSlider: document.getElementById('contractsSlider'),
-            contractsValue: document.getElementById('contractsValue'),
-            targetPoints: document.getElementById('targetPoints'),
-            targetPointsSlider: document.getElementById('targetPointsSlider'),
-            targetPointsValue: document.getElementById('targetPointsValue'),
-            stopPoints: document.getElementById('stopPoints'),
-            stopPointsSlider: document.getElementById('stopPointsSlider'),
-            stopPointsValue: document.getElementById('stopPointsValue'),
-            winRate: document.getElementById('winRate'),
-            winRateSlider: document.getElementById('winRateSlider'),
-            winRateValue: document.getElementById('winRateValue'),
-            profitTargetDisplay: document.getElementById('profitTargetDisplay'),
-            perTradePnL: document.getElementById('perTradePnL'),
-            tradesNeeded: document.getElementById('tradesNeeded'),
-            totalTrades: document.getElementById('totalTrades'),
-            riskReward: document.getElementById('riskReward'),
-            riskStatus: document.getElementById('riskStatus'),
-            advancedMode: document.getElementById('advancedMode'),
-            drawdownWarning: document.getElementById('drawdownWarning'),
-            drawdownMetrics: document.getElementById('drawdownMetrics'),
-            scenarioSection: document.getElementById('scenarioSection'),
-            scenarioTableBody: document.getElementById('scenarioTableBody')
-        };
+            // Prop firm configurations
+            const propFirmData = {
+                apex: {
+                    name: "Apex Trading",
+                    plans: {
+                        "25k": {
+                            size: 25000,
+                            profit: 1500,
+                            trailing: 1500,
+                            eod: null,
+                            contracts: 4,
+                        },
+                        "50k": {
+                            size: 50000,
+                            profit: 3000,
+                            trailing: 2500,
+                            eod: null,
+                            contracts: 10,
+                        },
+                        "100k": {
+                            size: 100000,
+                            profit: 6000,
+                            trailing: 3000,
+                            eod: null,
+                            contracts: 14,
+                        },
+                        "150k": {
+                            size: 150000,
+                            profit: 9000,
+                            trailing: 5000,
+                            eod: null,
+                            contracts: 17,
+                        },
+                        "250k": {
+                            size: 250000,
+                            profit: 15000,
+                            trailing: 6500,
+                            eod: null,
+                            contracts: 27,
+                        },
+                        "300k": {
+                            size: 300000,
+                            profit: 20000,
+                            trailing: 7500,
+                            eod: null,
+                            contracts: 35,
+                        },
+                    },
+                },
+                topstep: {
+                    name: "TopStep",
+                    plans: {
+                        "50k": {
+                            size: 50000,
+                            profit: 3000,
+                            trailing: 2000,
+                            eod: 2000,
+                            contracts: 5,
+                        },
+                        "100k": {
+                            size: 100000,
+                            profit: 6000,
+                            trailing: 3000,
+                            eod: 3000,
+                            contracts: 10,
+                        },
+                        "150k": {
+                            size: 150000,
+                            profit: 9000,
+                            trailing: 4500,
+                            eod: 4500,
+                            contracts: 15,
+                        },
+                    },
+                },
+                myfundedfutures: {
+                    name: "MyFundedFutures",
+                    plans: {
+                        "25k": {
+                            size: 25000,
+                            profit: 1500,
+                            trailing: 1250,
+                            eod: 1250,
+                            contracts: 3,
+                        },
+                        "50k": {
+                            size: 50000,
+                            profit: 3000,
+                            trailing: 2500,
+                            eod: 2500,
+                            contracts: 6,
+                        },
+                        "100k": {
+                            size: 100000,
+                            profit: 6000,
+                            trailing: 4000,
+                            eod: 4000,
+                            contracts: 12,
+                        },
+                    },
+                },
+                tradeify: {
+                    name: "Tradeify",
+                    plans: {
+                        "50k": {
+                            size: 50000,
+                            profit: 3000,
+                            trailing: 2000,
+                            eod: null,
+                            contracts: 5,
+                        },
+                        "100k": {
+                            size: 100000,
+                            profit: 6000,
+                            trailing: 3000,
+                            eod: null,
+                            contracts: 10,
+                        },
+                        "150k": {
+                            size: 150000,
+                            profit: 9000,
+                            trailing: 4500,
+                            eod: null,
+                            contracts: 15,
+                        },
+                    },
+                },
+                tpt: {
+                    name: "The Prop Trading",
+                    plans: {
+                        "50k": {
+                            size: 50000,
+                            profit: 2500,
+                            trailing: 2500,
+                            eod: 2500,
+                            contracts: 6,
+                        },
+                        "100k": {
+                            size: 100000,
+                            profit: 5000,
+                            trailing: 5000,
+                            eod: 5000,
+                            contracts: 12,
+                        },
+                        "200k": {
+                            size: 200000,
+                            profit: 10000,
+                            trailing: 10000,
+                            eod: 10000,
+                            contracts: 24,
+                        },
+                    },
+                },
+                custom: {
+                    name: "Custom Account",
+                    plans: {
+                        custom: {
+                            size: 50000,
+                            profit: 3000,
+                            trailing: 2500,
+                            eod: 2500,
+                            contracts: 10,
+                        },
+                    },
+                },
+            };
 
-        // Prop firm configurations
-        const propFirmData = {
-            apex: {
-                name: "Apex Trading",
-                plans: {
-                    "25k": { size: 25000, profit: 1500, trailing: 1500, eod: null, contracts: 4 },
-                    "50k": { size: 50000, profit: 3000, trailing: 2500, eod: null, contracts: 10 },
-                    "100k": { size: 100000, profit: 6000, trailing: 3000, eod: null, contracts: 14 },
-                    "150k": { size: 150000, profit: 9000, trailing: 5000, eod: null, contracts: 17 },
-                    "250k": { size: 250000, profit: 15000, trailing: 6500, eod: null, contracts: 27 },
-                    "300k": { size: 300000, profit: 20000, trailing: 7500, eod: null, contracts: 35 }
-                }
-            },
-            topstep: {
-                name: "TopStep",
-                plans: {
-                    "50k": { size: 50000, profit: 3000, trailing: 2000, eod: 2000, contracts: 5 },
-                    "100k": { size: 100000, profit: 6000, trailing: 3000, eod: 3000, contracts: 10 },
-                    "150k": { size: 150000, profit: 9000, trailing: 4500, eod: 4500, contracts: 15 }
-                }
-            },
-            myfundedfutures: {
-                name: "MyFundedFutures",
-                plans: {
-                    "25k": { size: 25000, profit: 1500, trailing: 1250, eod: 1250, contracts: 3 },
-                    "50k": { size: 50000, profit: 3000, trailing: 2500, eod: 2500, contracts: 6 },
-                    "100k": { size: 100000, profit: 6000, trailing: 4000, eod: 4000, contracts: 12 }
-                }
-            },
-            tradeify: {
-                name: "Tradeify",
-                plans: {
-                    "50k": { size: 50000, profit: 3000, trailing: 2000, eod: null, contracts: 5 },
-                    "100k": { size: 100000, profit: 6000, trailing: 3000, eod: null, contracts: 10 },
-                    "150k": { size: 150000, profit: 9000, trailing: 4500, eod: null, contracts: 15 }
-                }
-            },
-            tpt: {
-                name: "The Prop Trading",
-                plans: {
-                    "50k": { size: 50000, profit: 2500, trailing: 2500, eod: 2500, contracts: 6 },
-                    "100k": { size: 100000, profit: 5000, trailing: 5000, eod: 5000, contracts: 12 },
-                    "200k": { size: 200000, profit: 10000, trailing: 10000, eod: 10000, contracts: 24 }
-                }
-            },
-            custom: {
-                name: "Custom Account",
-                plans: {
-                    "custom": { size: 50000, profit: 3000, trailing: 2500, eod: 2500, contracts: 10 }
-                }
+            // Slider sync function
+            function syncSlider(
+                sliderId,
+                inputId,
+                valueId,
+                formatter = (v) => v,
+            ) {
+                const slider = document.getElementById(sliderId);
+                const input = document.getElementById(inputId);
+                const valueDisplay = document.getElementById(valueId);
+
+                slider.addEventListener("input", function () {
+                    input.value = this.value;
+                    if (valueDisplay)
+                        valueDisplay.textContent = formatter(this.value);
+                    calculateAll();
+                });
+
+                input.addEventListener("input", function () {
+                    slider.value = this.value;
+                    if (valueDisplay)
+                        valueDisplay.textContent = formatter(this.value);
+                    calculateAll();
+                });
             }
-        };
 
-        // Slider sync function
-        function syncSlider(sliderId, inputId, valueId, formatter = (v) => v) {
-            const slider = document.getElementById(sliderId);
-            const input = document.getElementById(inputId);
-            const valueDisplay = document.getElementById(valueId);
+            // Initialize all sliders
+            function initSliders() {
+                syncSlider(
+                    "accountSizeSlider",
+                    "accountSize",
+                    "accountSizeValue",
+                    (v) => `${v / 1000}K`,
+                );
+                syncSlider(
+                    "profitTargetSlider",
+                    "profitTarget",
+                    "profitTargetValue",
+                );
+                syncSlider(
+                    "trailingDrawdownSlider",
+                    "trailingDrawdown",
+                    "trailingDrawdownValue",
+                );
+                syncSlider(
+                    "eodDrawdownSlider",
+                    "eodDrawdown",
+                    "eodDrawdownValue",
+                );
+                syncSlider("contractsSlider", "contracts", "contractsValue");
+                syncSlider(
+                    "targetPointsSlider",
+                    "targetPoints",
+                    "targetPointsValue",
+                );
+                syncSlider("stopPointsSlider", "stopPoints", "stopPointsValue");
+                syncSlider(
+                    "winRateSlider",
+                    "winRate",
+                    "winRateValue",
+                    (v) => `${v}%`,
+                );
+            }
 
-            slider.addEventListener('input', function() {
-                input.value = this.value;
-                if (valueDisplay) valueDisplay.textContent = formatter(this.value);
+            // Update prop firm plans dropdown
+            function updatePropPlans() {
+                const selectedFirm = elements.propFirm.value;
+                const plans = propFirmData[selectedFirm].plans;
+
+                elements.propPlan.innerHTML = "";
+
+                if (selectedFirm === "custom") {
+                    elements.propPlan.innerHTML =
+                        '<option value="custom">Custom Plan</option>';
+                    return;
+                }
+
+                Object.keys(plans).forEach((planKey) => {
+                    const plan = plans[planKey];
+                    const option = document.createElement("option");
+                    option.value = planKey;
+                    option.textContent = `$${plan.size / 1000}K - $${plan.profit.toLocaleString()} Target`;
+                    elements.propPlan.appendChild(option);
+                });
+            }
+
+            // Update account parameters based on selected plan
+            function updateFromPropPlan() {
+                const selectedFirm = elements.propFirm.value;
+                const selectedPlan = elements.propPlan.value;
+
+                if (
+                    selectedFirm === "custom" ||
+                    !selectedPlan ||
+                    selectedPlan === "custom"
+                )
+                    return;
+
+                const plan = propFirmData[selectedFirm].plans[selectedPlan];
+                if (!plan) return;
+
+                // Update all values
+                elements.accountSize.value = plan.size;
+                elements.accountSizeSlider.value = plan.size;
+                elements.accountSizeValue.textContent = `${plan.size / 1000}K`;
+
+                elements.profitTarget.value = plan.profit;
+                elements.profitTargetSlider.value = plan.profit;
+                elements.profitTargetValue.textContent = plan.profit;
+
+                elements.trailingDrawdown.value = plan.trailing;
+                elements.trailingDrawdownSlider.value = plan.trailing;
+                elements.trailingDrawdownValue.textContent = plan.trailing;
+
+                if (plan.eod) {
+                    elements.eodDrawdown.value = plan.eod;
+                    elements.eodDrawdownSlider.value = plan.eod;
+                    elements.eodDrawdownValue.textContent = plan.eod;
+                }
+
                 calculateAll();
-            });
+            }
 
-            input.addEventListener('input', function() {
-                slider.value = this.value;
-                 if (valueDisplay) valueDisplay.textContent = formatter(this.value);
+            // Tab switching functionality
+            function switchDrawdownTab(activeTab) {
+                elements.trailingTab.classList.remove("active");
+                elements.eodTab.classList.remove("active");
+                activeTab.classList.add("active");
+
+                if (activeTab === elements.trailingTab) {
+                    elements.trailingDrawdownContainer.style.display = "block";
+                    elements.eodDrawdownContainer.style.display = "none";
+                } else {
+                    elements.trailingDrawdownContainer.style.display = "none";
+                    elements.eodDrawdownContainer.style.display = "block";
+                }
                 calculateAll();
-            });
-        }
-
-        // Initialize all sliders
-        function initSliders() {
-            syncSlider('accountSizeSlider', 'accountSize', 'accountSizeValue', v => `${(v/1000)}K`);
-            syncSlider('profitTargetSlider', 'profitTarget', 'profitTargetValue');
-            syncSlider('trailingDrawdownSlider', 'trailingDrawdown', 'trailingDrawdownValue');
-            syncSlider('eodDrawdownSlider', 'eodDrawdown', 'eodDrawdownValue');
-            syncSlider('contractsSlider', 'contracts', 'contractsValue');
-            syncSlider('targetPointsSlider', 'targetPoints', 'targetPointsValue');
-            syncSlider('stopPointsSlider', 'stopPoints', 'stopPointsValue');
-            syncSlider('winRateSlider', 'winRate', 'winRateValue', v => `${v}%`);
-        }
-
-        // Update prop firm plans dropdown
-        function updatePropPlans() {
-            const selectedFirm = elements.propFirm.value;
-            const plans = propFirmData[selectedFirm].plans;
-
-            elements.propPlan.innerHTML = '';
-
-            if (selectedFirm === 'custom') {
-                elements.propPlan.innerHTML = '<option value="custom">Custom Plan</option>';
-                return;
             }
 
-            Object.keys(plans).forEach(planKey => {
-                const plan = plans[planKey];
-                const option = document.createElement('option');
-                option.value = planKey;
-                option.textContent = `$${(plan.size / 1000)}K - $${plan.profit.toLocaleString()} Target`;
-                elements.propPlan.appendChild(option);
-            });
-        }
+            // Generate prop firm scenarios
+            function showScenarios(profitTarget, accountSize, drawdownLimit) {
+                let maxContracts = 10;
+                if (accountSize <= 25000) maxContracts = 4;
+                else if (accountSize <= 50000) maxContracts = 10;
+                else if (accountSize <= 100000) maxContracts = 14;
+                else if (accountSize <= 150000) maxContracts = 17;
+                else if (accountSize <= 250000) maxContracts = 27;
+                else if (accountSize <= 300000) maxContracts = 35;
+                else maxContracts = Math.floor(accountSize / 10000);
 
-        // Update account parameters based on selected plan
-        function updateFromPropPlan() {
-            const selectedFirm = elements.propFirm.value;
-            const selectedPlan = elements.propPlan.value;
+                const scenarios = [
+                    {
+                        level: "Ultra Conservative",
+                        contracts: Math.max(1, Math.floor(maxContracts * 0.1)),
+                        target: 25,
+                        stop: 15,
+                    },
+                    {
+                        level: "Conservative",
+                        contracts: Math.max(1, Math.floor(maxContracts * 0.2)),
+                        target: 30,
+                        stop: 15,
+                    },
+                    {
+                        level: "Moderate",
+                        contracts: Math.max(2, Math.floor(maxContracts * 0.4)),
+                        target: 35,
+                        stop: 20,
+                    },
+                    {
+                        level: "Balanced",
+                        contracts: Math.max(3, Math.floor(maxContracts * 0.6)),
+                        target: 40,
+                        stop: 25,
+                    },
+                    {
+                        level: "Aggressive",
+                        contracts: Math.max(4, Math.floor(maxContracts * 0.8)),
+                        target: 50,
+                        stop: 30,
+                    },
+                    {
+                        level: "Very Aggressive",
+                        contracts: maxContracts,
+                        target: 60,
+                        stop: 35,
+                    },
+                ];
 
-            if (selectedFirm === 'custom' || !selectedPlan || selectedPlan === 'custom') return;
+                let html = "";
+                scenarios.forEach((s) => {
+                    const profit = s.contracts * s.target * NQ_POINT_VALUE;
+                    const loss = s.contracts * s.stop * NQ_POINT_VALUE;
+                    const trades =
+                        profit > 0 ? Math.ceil(profitTarget / profit) : "∞";
+                    const risk =
+                        accountSize > 0 ? (loss / accountSize) * 100 : 0;
+                    const rr = s.stop > 0 ? (s.target / s.stop).toFixed(2) : 0;
 
-            const plan = propFirmData[selectedFirm].plans[selectedPlan];
-            if (!plan) return;
+                    let riskLevel =
+                        risk <= 0.5
+                            ? "Very Safe"
+                            : risk <= 1
+                              ? "Safe"
+                              : risk <= 2
+                                ? "Moderate"
+                                : risk <= 3
+                                  ? "Risky"
+                                  : "Very Risky";
 
-            // Update all values
-            elements.accountSize.value = plan.size;
-            elements.accountSizeSlider.value = plan.size;
-            elements.accountSizeValue.textContent = `${(plan.size / 1000)}K`;
-
-            elements.profitTarget.value = plan.profit;
-            elements.profitTargetSlider.value = plan.profit;
-            elements.profitTargetValue.textContent = plan.profit;
-
-            elements.trailingDrawdown.value = plan.trailing;
-            elements.trailingDrawdownSlider.value = plan.trailing;
-            elements.trailingDrawdownValue.textContent = plan.trailing;
-
-            if (plan.eod) {
-                elements.eodDrawdown.value = plan.eod;
-                elements.eodDrawdownSlider.value = plan.eod;
-                elements.eodDrawdownValue.textContent = plan.eod;
-            }
-
-            calculateAll();
-        }
-
-        // Tab switching functionality
-        function switchDrawdownTab(activeTab) {
-            elements.trailingTab.classList.remove('active');
-            elements.eodTab.classList.remove('active');
-            activeTab.classList.add('active');
-
-            if (activeTab === elements.trailingTab) {
-                elements.trailingDrawdownContainer.style.display = 'block';
-                elements.eodDrawdownContainer.style.display = 'none';
-            } else {
-                elements.trailingDrawdownContainer.style.display = 'none';
-                elements.eodDrawdownContainer.style.display = 'block';
-            }
-            calculateAll();
-        }
-
-        // Generate prop firm scenarios
-        function showScenarios(profitTarget, accountSize, drawdownLimit) {
-            let maxContracts = 10;
-            if (accountSize <= 25000) maxContracts = 4;
-            else if (accountSize <= 50000) maxContracts = 10;
-            else if (accountSize <= 100000) maxContracts = 14;
-            else if (accountSize <= 150000) maxContracts = 17;
-            else if (accountSize <= 250000) maxContracts = 27;
-            else if (accountSize <= 300000) maxContracts = 35;
-            else maxContracts = Math.floor(accountSize / 10000);
-
-            const scenarios = [
-                { level: "Ultra Conservative", contracts: Math.max(1, Math.floor(maxContracts * 0.1)), target: 25, stop: 15 },
-                { level: "Conservative", contracts: Math.max(1, Math.floor(maxContracts * 0.2)), target: 30, stop: 15 },
-                { level: "Moderate", contracts: Math.max(2, Math.floor(maxContracts * 0.4)), target: 35, stop: 20 },
-                { level: "Balanced", contracts: Math.max(3, Math.floor(maxContracts * 0.6)), target: 40, stop: 25 },
-                { level: "Aggressive", contracts: Math.max(4, Math.floor(maxContracts * 0.8)), target: 50, stop: 30 },
-                { level: "Very Aggressive", contracts: maxContracts, target: 60, stop: 35 }
-            ];
-
-            let html = '';
-            scenarios.forEach(s => {
-                const profit = s.contracts * s.target * NQ_POINT_VALUE;
-                const loss = s.contracts * s.stop * NQ_POINT_VALUE;
-                const trades = profit > 0 ? Math.ceil(profitTarget / profit) : '∞';
-                const risk = accountSize > 0 ? (loss / accountSize) * 100 : 0;
-                const rr = s.stop > 0 ? (s.target / s.stop).toFixed(2) : 0;
-
-                let riskLevel = risk <= 0.5 ? "Very Safe" : risk <= 1 ? "Safe" : risk <= 2 ? "Moderate" : risk <= 3 ? "Risky" : "Very Risky";
-
-                html += `
+                    html += `
                     <tr>
                         <td><strong>${s.level}</strong></td>
                         <td>${s.contracts}</td>
@@ -828,111 +1266,138 @@
                         <td>${riskLevel}<br><small>(${risk.toFixed(1)}%)</small></td>
                     </tr>
                 `;
-            });
+                });
 
-            elements.scenarioTableBody.innerHTML = html;
-            elements.scenarioSection.style.display = 'block';
-        }
-
-        // Main calculation function
-        function calculateAll() {
-            // --- Parse all input values ---
-            const accountSize = parseFloat(elements.accountSize.value) || 0;
-            const profitTarget = parseFloat(elements.profitTarget.value) || 0;
-            const contracts = parseInt(elements.contracts.value) || 0;
-            const targetPoints = parseFloat(elements.targetPoints.value) || 0;
-            const stopPoints = parseFloat(elements.stopPoints.value) || 0;
-            const winRate = (parseFloat(elements.winRate.value) || 0) / 100;
-
-            // --- Determine the active drawdown limit based on the selected tab ---
-            const isTrailingActive = elements.trailingTab.classList.contains('active');
-            const activeDrawdownLimit = isTrailingActive
-                ? parseFloat(elements.trailingDrawdown.value) || 0
-                : parseFloat(elements.eodDrawdown.value) || 0;
-
-            // --- Perform calculations ---
-            const profitPerTrade = contracts * targetPoints * NQ_POINT_VALUE;
-            const lossPerTrade = contracts * stopPoints * NQ_POINT_VALUE;
-            const riskRewardRatio = stopPoints > 0 ? targetPoints / stopPoints : 0;
-            const tradesNeededSimple = profitPerTrade > 0 ? Math.ceil(profitTarget / profitPerTrade) : '∞';
-
-            const expectedValue = (profitPerTrade * winRate) - (lossPerTrade * (1 - winRate));
-            const tradesNeededExpected = expectedValue > 0 ? Math.ceil(profitTarget / expectedValue) : "∞";
-
-            // --- Update top metrics display ---
-            elements.profitTargetDisplay.textContent = `$${profitTarget.toLocaleString()}`;
-            elements.perTradePnL.textContent = `$${profitPerTrade.toLocaleString()}`;
-            elements.tradesNeeded.textContent = tradesNeededSimple;
-            elements.riskReward.textContent = `${riskRewardRatio.toFixed(2)}:1`;
-            elements.totalTrades.textContent = tradesNeededExpected;
-
-            // --- Risk assessment ---
-            const accountRiskPerTrade = accountSize > 0 ? (lossPerTrade / accountSize) * 100 : 0;
-            let riskLevel, riskMessage, riskClass;
-
-            if (accountRiskPerTrade <= 1) {
-                riskLevel = "LOW RISK";
-                riskMessage = `Safe approach - ${accountRiskPerTrade.toFixed(2)}% risk per trade`;
-                riskClass = "risk-low";
-            } else if (accountRiskPerTrade <= 3) {
-                riskLevel = "MEDIUM RISK";
-                riskMessage = `Moderate approach - ${accountRiskPerTrade.toFixed(2)}% risk per trade`;
-                riskClass = "risk-medium";
-            } else {
-                riskLevel = "HIGH RISK";
-                riskMessage = `Aggressive approach - ${accountRiskPerTrade.toFixed(2)}% risk per trade`;
-                riskClass = "risk-high";
+                elements.scenarioTableBody.innerHTML = html;
+                elements.scenarioSection.style.display = "block";
             }
 
-            elements.riskStatus.textContent = `${riskLevel} - ${riskMessage}`;
-            elements.riskStatus.className = `risk-status ${riskClass}`;
+            // Main calculation function
+            function calculateAll() {
+                // --- Parse all input values ---
+                const accountSize = parseFloat(elements.accountSize.value) || 0;
+                const profitTarget =
+                    parseFloat(elements.profitTarget.value) || 0;
+                const contracts = parseInt(elements.contracts.value) || 0;
+                const targetPoints =
+                    parseFloat(elements.targetPoints.value) || 0;
+                const stopPoints = parseFloat(elements.stopPoints.value) || 0;
+                const winRate = (parseFloat(elements.winRate.value) || 0) / 100;
 
-            // --- Drawdown analysis ---
-            const maxConsecutiveLosses = lossPerTrade > 0 ? Math.floor(activeDrawdownLimit / lossPerTrade) : '∞';
-            const drawdownPercentage = accountSize > 0 ? (activeDrawdownLimit / accountSize) * 100 : 0;
+                // --- Determine the active drawdown limit based on the selected tab ---
+                const isTrailingActive =
+                    elements.trailingTab.classList.contains("active");
+                const activeDrawdownLimit = isTrailingActive
+                    ? parseFloat(elements.trailingDrawdown.value) || 0
+                    : parseFloat(elements.eodDrawdown.value) || 0;
 
-            elements.drawdownWarning.innerHTML = `
+                // --- Perform calculations ---
+                const profitPerTrade =
+                    contracts * targetPoints * NQ_POINT_VALUE;
+                const lossPerTrade = contracts * stopPoints * NQ_POINT_VALUE;
+                const riskRewardRatio =
+                    stopPoints > 0 ? targetPoints / stopPoints : 0;
+                const tradesNeededSimple =
+                    profitPerTrade > 0
+                        ? Math.ceil(profitTarget / profitPerTrade)
+                        : "∞";
+
+                const expectedValue =
+                    profitPerTrade * winRate - lossPerTrade * (1 - winRate);
+                const tradesNeededExpected =
+                    expectedValue > 0
+                        ? Math.ceil(profitTarget / expectedValue)
+                        : "∞";
+
+                // --- Update top metrics display ---
+                elements.profitTargetDisplay.textContent = `$${profitTarget.toLocaleString()}`;
+                elements.perTradePnL.textContent = `$${profitPerTrade.toLocaleString()}`;
+                elements.tradesNeeded.textContent = tradesNeededSimple;
+                elements.riskReward.textContent = `${riskRewardRatio.toFixed(2)}:1`;
+                elements.totalTrades.textContent = tradesNeededExpected;
+
+                // --- Risk assessment ---
+                const accountRiskPerTrade =
+                    accountSize > 0 ? (lossPerTrade / accountSize) * 100 : 0;
+                let riskLevel, riskMessage, riskClass;
+
+                if (accountRiskPerTrade <= 1) {
+                    riskLevel = "LOW RISK";
+                    riskMessage = `Safe approach - ${accountRiskPerTrade.toFixed(2)}% risk per trade`;
+                    riskClass = "risk-low";
+                } else if (accountRiskPerTrade <= 3) {
+                    riskLevel = "MEDIUM RISK";
+                    riskMessage = `Moderate approach - ${accountRiskPerTrade.toFixed(2)}% risk per trade`;
+                    riskClass = "risk-medium";
+                } else {
+                    riskLevel = "HIGH RISK";
+                    riskMessage = `Aggressive approach - ${accountRiskPerTrade.toFixed(2)}% risk per trade`;
+                    riskClass = "risk-high";
+                }
+
+                elements.riskStatus.textContent = `${riskLevel} - ${riskMessage}`;
+                elements.riskStatus.className = `risk-status ${riskClass}`;
+
+                // --- Drawdown analysis ---
+                const maxConsecutiveLosses =
+                    lossPerTrade > 0
+                        ? Math.floor(activeDrawdownLimit / lossPerTrade)
+                        : "∞";
+                const drawdownPercentage =
+                    accountSize > 0
+                        ? (activeDrawdownLimit / accountSize) * 100
+                        : 0;
+
+                elements.drawdownWarning.innerHTML = `
                 Maximum consecutive losses before failure: <strong>${maxConsecutiveLosses}</strong><br>
                 Effective drawdown limit: <strong>$${activeDrawdownLimit.toLocaleString()}</strong> (${drawdownPercentage.toFixed(1)}% of account)
             `;
 
-            elements.drawdownMetrics.innerHTML = `
-                <p><strong>${isTrailingActive ? 'Trailing Drawdown' : 'EOD Drawdown'} Risk:</strong> Monitor your peak balance carefully.</p>
+                elements.drawdownMetrics.innerHTML = `
+                <p><strong>${isTrailingActive ? "Trailing Drawdown" : "EOD Drawdown"} Risk:</strong> Monitor your peak balance carefully.</p>
                 <p><strong>Loss per Trade:</strong> $${lossPerTrade.toLocaleString()}</p>
                 <p><strong>Failure Point:</strong> ${maxConsecutiveLosses} consecutive losses</p>
             `;
 
-            // --- Generate scenarios if advanced mode is enabled ---
-            if (elements.advancedMode.checked) {
-                showScenarios(profitTarget, accountSize, activeDrawdownLimit);
+                // --- Generate scenarios if advanced mode is enabled ---
+                if (elements.advancedMode.checked) {
+                    showScenarios(
+                        profitTarget,
+                        accountSize,
+                        activeDrawdownLimit,
+                    );
+                }
             }
-        }
 
-        // Event listeners
-        elements.propFirm.addEventListener('change', function() {
-            updatePropPlans();
-            updateFromPropPlan();
-        });
+            // Event listeners
+            elements.propFirm.addEventListener("change", function () {
+                updatePropPlans();
+                updateFromPropPlan();
+            });
 
-        elements.propPlan.addEventListener('change', updateFromPropPlan);
+            elements.propPlan.addEventListener("change", updateFromPropPlan);
 
-        elements.trailingTab.addEventListener('click', () => switchDrawdownTab(elements.trailingTab));
-        elements.eodTab.addEventListener('click', () => switchDrawdownTab(elements.eodTab));
+            elements.trailingTab.addEventListener("click", () =>
+                switchDrawdownTab(elements.trailingTab),
+            );
+            elements.eodTab.addEventListener("click", () =>
+                switchDrawdownTab(elements.eodTab),
+            );
 
-        elements.advancedMode.addEventListener('change', function() {
-            if (this.checked) {
-                calculateAll(); // Recalculate to get current values
-            } else {
-                elements.scenarioSection.style.display = 'none';
-            }
-        });
+            elements.advancedMode.addEventListener("change", function () {
+                if (this.checked) {
+                    calculateAll(); // Recalculate to get current values
+                } else {
+                    elements.scenarioSection.style.display = "none";
+                }
+            });
 
-        // Initialize everything on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updatePropPlans();
-            initSliders();
-            updateFromPropPlan(); // This will also call calculateAll
-        });
-    </script>
-</body>
+            // Initialize everything on page load
+            document.addEventListener("DOMContentLoaded", function () {
+                updatePropPlans();
+                initSliders();
+                updateFromPropPlan(); // This will also call calculateAll
+            });
+        </script>
+    </body>
 </html>
