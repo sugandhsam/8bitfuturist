@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Trade Journal - Professional</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="css/styles.css" />
+        <style>
+            .nav-links {
+                display: flex;
+                gap: 12px;
+                list-style: none;
+                margin: 0;
+                padding: 0;
+            }
+
+            .nav-link {
+                padding: 8px 16px;
+                border-radius: 6px;
+                font-weight: 500;
+                font-size: 0.875rem;
+                text-decoration: none;
+                transition: all 0.2s ease;
+                color: rgba(255, 255, 255, 0.8);
+                border: 1px solid transparent;
+            }
+
+            .nav-link:hover {
+                color: white;
+                background: rgba(255, 255, 255, 0.1);
+            }
+
+            .nav-link.active {
+                color: white;
+                background: rgba(255, 255, 255, 0.2);
+                border-color: rgba(255, 255, 255, 0.3);
+            }
+
+            @media (max-width: 768px) {
+                .header-gradient {
+                    flex-direction: column;
+                    gap: 1rem;
+                }
+
+                .nav-links {
+                    width: 100%;
+                }
+
+                .nav-link {
+                    flex: 1;
+                    text-align: center;
+                    padding: 6px 12px;
+                    font-size: 0.75rem;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="min-h-screen p-6">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header Section -->
+                <div class="header-gradient">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h1 class="text-3xl font-bold mb-2">
+                                Trade Journal
+                            </h1>
+                            <p class="text-gray-300">
+                                Track your trading performance with precision
+                            </p>
+                            <div class="text-sm text-gray-300 mt-3">
+                                <div id="currentDate" class="font-medium"></div>
+                                <div id="currentTime" class="text-xs opacity-90"></div>
+                            </div>
+                        </div>
+                        <ul class="nav-links">
+                            <li>
+                                <a href="/" class="nav-link">Prop Bunker</a>
+                            </li>
+                            <li>
+                                <a href="./" class="nav-link active"
+                                    >Trade Journal</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Trader Info Card -->
+                <div class="card mb-6">
+                    <div class="card-content">
+                        <div class="flex items-center justify-between gap-6">
+                            <div class="flex-1 max-w-md">
+                                <label
+                                    class="block text-sm font-medium mb-2 text-gray-700"
+                                    >Trader Name</label
+                                >
+                                <input
+                                    type="text"
+                                    id="traderName"
+                                    placeholder="Enter your trading name"
+                                    class="input"
+                                />
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <button
+                                    id="saveName"
+                                    class="button button-primary"
+                                >
+                                    <svg
+                                        class="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M5 13l4 4L19 7"
+                                        ></path>
+                                    </svg>
+                                    Save Name
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Dashboard -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">
+                                    Total P/L
+                                </p>
+                                <p class="text-2xl font-bold" id="totalPL">
+                                    +$0.00
+                                </p>
+                            </div>
+                            <div
+                                id="totalPLIcon"
+                                class="p-3 bg-blue-100 rounded-full"
+                            >
+                                <div
+                                    class="w-6 h-6 text-blue-600 flex items-center justify-center font-bold text-lg"
+                                >
+                                    $
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">
+                                    Total Trades
+                                </p>
+                                <p class="text-2xl font-bold" id="totalTrades">
+                                    0
+                                </p>
+                            </div>
+                            <div class="p-3 bg-green-100 rounded-full">
+                                <svg
+                                    class="w-6 h-6 text-green-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">
+                                    Win Rate
+                                </p>
+                                <p class="text-2xl font-bold" id="winRate">
+                                    0%
+                                </p>
+                            </div>
+                            <div class="p-3 bg-purple-100 rounded-full">
+                                <svg
+                                    class="w-6 h-6 text-purple-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-600">
+                                    Avg R:R
+                                </p>
+                                <p class="text-2xl font-bold" id="avgRR">
+                                    1:1
+                                </p>
+                            </div>
+                            <div class="p-3 bg-orange-100 rounded-full">
+                                <svg
+                                    class="w-6 h-6 text-orange-600"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16l6-2"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="card mb-6">
+                    <div class="card-content">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                            <div class="flex-1 max-w-md">
+                                <input
+                                    type="text"
+                                    id="searchFilter"
+                                    placeholder="Search trades by instrument, position, or timeframe..."
+                                    class="input"
+                                />
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button
+                                    id="generateReport"
+                                    class="button button-secondary"
+                                >
+                                    <svg
+                                        class="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        ></path>
+                                    </svg>
+                                    Daily Report
+                                </button>
+                                <button
+                                    id="exportCSV"
+                                    class="button button-secondary"
+                                >
+                                    <svg
+                                        class="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                        ></path>
+                                    </svg>
+                                    Export CSV
+                                </button>
+                                <button
+                                    id="clearAll"
+                                    class="button button-destructive"
+                                >
+                                    <svg
+                                        class="w-4 h-4 mr-2"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            stroke-width="2"
+                                            d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                        ></path>
+                                    </svg>
+                                    Clear All
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trading Table -->
+                <div class="card">
+                    <div class="card-content p-0">
+                        <div class="overflow-x-auto">
+                            <table class="table">
+                                <thead class="table-header">
+                                    <tr>
+                                        <th>Instrument</th>
+                                        <th>Position</th>
+                                        <th>Quantity</th>
+                                        <th>Timeframe</th>
+                                        <th>Tick Value</th>
+                                        <th>Entry Price</th>
+                                        <th>Exit Price</th>
+                                        <th>P/L</th>
+                                        <th>Time</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tradesTable">
+                                    <!-- Input Row -->
+                                    <tr class="input-row table-row">
+                                        <td class="table-cell">
+                                            <input
+                                                type="text"
+                                                id="instrumentInput"
+                                                placeholder="e.g. AAPL"
+                                                class="input"
+                                            />
+                                        </td>
+                                        <td class="table-cell">
+                                            <select
+                                                id="positionInput"
+                                                class="input select"
+                                            >
+                                                <option value="">
+                                                    Position
+                                                </option>
+                                                <option value="Long">
+                                                    Long
+                                                </option>
+                                                <option value="Short">
+                                                    Short
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td class="table-cell">
+                                            <input
+                                                type="number"
+                                                id="quantityInput"
+                                                placeholder="100"
+                                                class="input"
+                                                min="1"
+                                                step="1"
+                                            />
+                                        </td>
+                                        <td class="table-cell">
+                                            <select
+                                                id="timeFrameInput"
+                                                class="input select"
+                                            >
+                                                <option value="">
+                                                    Timeframe
+                                                </option>
+                                                <option value="1m">1m</option>
+                                                <option value="5m">5m</option>
+                                                <option value="15m">
+                                                    15m
+                                                </option>
+                                                <option value="30m">
+                                                    30m
+                                                </option>
+                                                <option value="1h">1h</option>
+                                                <option value="4h">4h</option>
+                                                <option value="1D">1D</option>
+                                            </select>
+                                        </td>
+                                        <td class="table-cell">
+                                            <input
+                                                type="number"
+                                                id="tickValueInput"
+                                                placeholder="1"
+                                                class="input"
+                                                min="1"
+                                                step="1"
+                                            />
+                                        </td>
+                                        <td class="table-cell">
+                                            <input
+                                                type="number"
+                                                id="entryInput"
+                                                placeholder="0.00"
+                                                class="input"
+                                                step="0.01"
+                                            />
+                                        </td>
+                                        <td class="table-cell">
+                                            <input
+                                                type="number"
+                                                id="exitInput"
+                                                placeholder="0.00"
+                                                class="input"
+                                                step="0.01"
+                                            />
+                                        </td>
+                                        <td class="table-cell">
+                                            <span
+                                                id="plPreview"
+                                                class="text-sm text-gray-500"
+                                                >Live calculation</span
+                                            >
+                                        </td>
+                                        <td class="table-cell">
+                                            <input
+                                                type="time"
+                                                id="timeInput"
+                                                class="input"
+                                                step="60"
+                                            />
+                                        </td>
+                                        <td class="table-cell">
+                                            <button
+                                                id="addTrade"
+                                                class="button button-primary button-sm"
+                                            >
+                                                <svg
+                                                    class="w-4 h-4 mr-1"
+                                                    fill="none"
+                                                    stroke="currentColor"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                        stroke-width="2"
+                                                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                                                    ></path>
+                                                </svg>
+                                                Add Trade
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Notification -->
+        <div id="toast" class="toast">
+            <div class="flex items-center">
+                <div id="toastIcon" class="mr-3"></div>
+                <div id="toastMessage" class="font-medium"></div>
+            </div>
+        </div>
+
+        <script src="js/main.js"></script>
+    </body>
+</html>
